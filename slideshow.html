@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .box {
+            position: relative;
+            width: 700px;
+            height: 700px;
+            margin: 0 auto;
+            border: 1px solid #ccc;
+            overflow: hidden;
+        }
+
+        .box .img-list {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4900px;
+            height: 100%;
+            display: flex;
+            list-style: none;
+        }
+
+        .box .btn {
+            position: absolute;
+            top: 50%;
+            width: 45px;
+            height: 90px;
+            background: rgba(11, 141, 197, 0.3);
+            line-height: 90px;
+            text-align: center;
+            font-size: 50px;
+            margin-top: -45px;
+            color: white;
+        }
+
+        .box .btn:hover {
+            background: rgba(11, 141, 197, 0.7);
+            cursor: pointer;
+
+        }
+
+        .box .left-btn {
+            left: 0;
+        }
+
+        .box .right-btn {
+            right: 0;
+        }
+
+        .box .cir-list {
+            position: absolute;
+            bottom: 20px;
+            left: 20%;
+            right: 20%;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            list-style: none;
+        }
+
+        .box .cir-list li {
+            transition: all 1s ease 0s;
+            width: 30px;
+            height: 30px;
+            background: rgba(255, 4, 213, 0.84);
+            border-radius: 50%;
+        }
+
+        .box .cir-list li.active {
+            width: 150px;
+            height: 30px;
+            border-radius: 15px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="box" class="box">
+        <!-- 图片列表 -->
+        <ul id="imgList" class="img-list">
+            <li><img src="imgs/abeiduo.jpg" alt=""></li>
+            <li><img src="imgs/bachong.jpg" alt=""></li>
+            <li><img src="imgs/lingren.jpg" alt=""></li>
+            <li><img src="imgs/shenhe.jpg" alt=""></li>
+            <li><img src="imgs/wanye.jpg" alt=""></li>
+            <li><img src="imgs/xiao.jpg" alt=""></li>
+            <li><img src="imgs/zhongli.jpg" alt=""></li>
+            <li><img src="imgs/abeiduo.jpg" alt=""></li>
+        </ul>
+        <!-- 左右按钮 -->
+        <div id="leftBtn" class="left-btn btn">&lt;</div>
+        <div id="rightBtn" class="right-btn btn">&gt;</div>
+        <!-- 小圆点列表 -->
+        <ul id="cirList" class="cir-list">
+            <li class="active"></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
+    </div>
+    <script src="./js/jquery-3.6.0.min.js"></script>
+    <script>
+        // 获取元素
+        let $imgList = $("#imgList"); // 图片列表
+        let $leftBtn = $("#leftBtn"); // 左按钮
+        let $rightBtn = $('#rightBtn'); // 右按钮
+        let $cirList = $('#cirList li'); // 小圆点列表
+        let $box = $("#box"); // 容器元素
+
+        // 获取宽度
+        let width = $box.width();
+        // 定义一个变量用于保存复用动画时长
+        let time = 1000;
+        // 定义idx 代表了当前是第几张图
+        let idx = 0;
+        // 定义变量用于保存图片张数
+        let length = $imgList.children().length - 1
+        // 右按钮
+        $rightBtn.click(function () {
+            idx++;
+            // stop()方法用于清空动画队列 
+            $imgList.stop().animate({ left: -width * idx }, time, function () {
+                console.log(idx)
+                if (idx >= length) {
+                    $imgList.css("left", 0);
+                    idx = 0;
+                }
+            })
+            change.call($cirList[idx >= length ? 0 : idx])
+        })
+
+        // 左按钮
+        $leftBtn.click(function () {
+            idx--;
+            if (idx < 0) {
+                $imgList.css("left", -length * width)
+                idx = length - 1;
+            }
+            $imgList.stop().animate({ left: -width * idx }, time, function () {
+                console.log(this)
+            })
+            change.call($cirList[idx])
+        })
+
+        // 小圆点
+        $cirList.click(function () {
+            change.call(this)
+            let now = $(this).index();
+            idx = now;
+            $imgList.stop().animate({ left: -now * width }, time)
+        })
+        function change() {
+            $(this).addClass("active").siblings().removeClass("active")
+        }
+        var timer = setInterval(function () {
+            // $rightBtn.click()
+            $rightBtn.trigger("click") // 该方法用于触发事件 
+        }, time * 2)
+
+    </script>
+    </body>
+
+</html>
